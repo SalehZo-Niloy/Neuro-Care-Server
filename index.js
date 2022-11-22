@@ -21,7 +21,14 @@ const verifyJWT = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    console.log(token);
+
+    jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
+        if (err) {
+            return res.status(403).send({ message: 'Forbidden' });
+        }
+        req.decoded = decoded;
+        next();
+    })
 }
 
 const run = async () => {
@@ -101,6 +108,11 @@ const run = async () => {
 
         app.get('/bookings', verifyJWT, async (req, res) => {
             const email = req.query.email;
+            const decodedEmail = req.decoded.email;
+
+            if (email !== decodedEmail) {
+                return res.status(403).send({ message: 'Forbidden Access' });
+            }
             const query = {
                 email: email
             };
