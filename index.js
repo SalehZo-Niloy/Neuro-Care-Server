@@ -37,6 +37,7 @@ const run = async () => {
         const appointmentOptionCollection = client.db("neuro-care").collection("appointment-options");
         const bookingCollection = client.db("neuro-care").collection("bookings");
         const userCollection = client.db("neuro-care").collection("users");
+        const doctorCollection = client.db("neuro-care").collection("doctors");
 
         app.get('/appointmentOptions', async (req, res) => {
             const query = {};
@@ -200,6 +201,19 @@ const run = async () => {
             const result = await userCollection.updateOne(filter, updateDoc, options);
             res.send(result);
         });
+
+        app.get('/doctors', async (req, res) => {
+            const query = {};
+            const doctors = await doctorCollection.find(query).toArray();
+            res.send(doctors);
+        })
+
+        app.post('/doctors', async (req, res) => {
+            const doctor = req.body;
+
+            const result = await doctorCollection.insertOne(doctor);
+            res.send(result);
+        })
 
     }
     finally {
