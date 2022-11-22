@@ -107,6 +107,13 @@ const run = async () => {
 
         });
 
+        app.get('/specialtyOptions', async (req, res) => {
+            const query = {};
+
+            const options = await appointmentOptionCollection.find(query).project({ name: 1 }).toArray();
+            res.send(options);
+        });
+
         app.get('/bookings', verifyJWT, async (req, res) => {
             const email = req.query.email;
             const decodedEmail = req.decoded.email;
