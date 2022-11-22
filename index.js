@@ -166,6 +166,13 @@ const run = async () => {
             res.send(result);
         });
 
+        app.get('/users/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const admin = await userCollection.findOne(query);
+            res.send({ isAdmin: admin?.role === 'admin' });
+        })
+
         app.put('/users/admin/:id', verifyJWT, async (req, res) => {
             const decodedEmail = req.decoded.email;
             const query = { email: decodedEmail };
