@@ -206,14 +206,22 @@ const run = async () => {
             const query = {};
             const doctors = await doctorCollection.find(query).toArray();
             res.send(doctors);
-        })
+        });
 
         app.post('/doctors', async (req, res) => {
             const doctor = req.body;
 
             const result = await doctorCollection.insertOne(doctor);
             res.send(result);
-        })
+        });
+
+        app.delete('/doctors/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+
+            const result = await doctorCollection.deleteOne(query);
+            res.send(result);
+        });
 
     }
     finally {
